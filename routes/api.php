@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 //public routes
 Route::post('/sign-in', [UserController::class, 'store']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/check/token', [AuthController::class, 'checkToken']);
+Route::post('/check/token', [AuthController::class, 'checkToken']);
 
 
 

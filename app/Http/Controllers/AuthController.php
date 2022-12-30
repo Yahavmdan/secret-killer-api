@@ -9,16 +9,16 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
-    public function checkToken(Request $request): Response
+    public function checkToken(Request $request): bool
     {
-        $token = $request['token'];
-        error_log($token);
-        $tokenExist = PersonalAccessToken::findToken($token);
-        $user = User::where('id' , $tokenExist->name)->first();
-        if ($user) {
-            return response(['message' => 'Ok', 'responseCode'  => 1], 200);
-        }
+        $token = $request->getContent();
 
-        return response(['message' => 'Bad request', 'responseCode' => 2], 400);
+        if ($token) {
+            $tokenExist = PersonalAccessToken::findToken($token);
+            if ($tokenExist) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserSignInRequest;
 use App\Models\User;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -29,7 +30,7 @@ class UserController extends Controller
             'token' => $token,
         ];
 
-        return response($response, 200);
+        return response(collect($response), 200);
     }
 
 
@@ -38,7 +39,7 @@ class UserController extends Controller
         $user = User::where('email', $request['email'])->first();
 
         if (!$user) {
-            return response(['message' => 'One of the details is wrong'], 400);
+            return response(collect(['message' => 'One of the details is wrong']), 400);
         }
 
         if (!Hash::check($request['password'], $user->password)) {
@@ -52,6 +53,6 @@ class UserController extends Controller
             'token' => $token,
         ];
 
-        return response($response, 200);
+        return response(collect($response), 200);
     }
 }
