@@ -12,8 +12,9 @@ class Message implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public function __construct(
-        public string $message,
-        public string $userName
+        public $message,
+        public $userName,
+        public $time
     ) {}
 
     public function broadcastOn(): array
