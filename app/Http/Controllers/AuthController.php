@@ -17,6 +17,8 @@ class AuthController extends Controller
             $tokenExist = PersonalAccessToken::findToken($token);
             if ($tokenExist) {
                 return true;
+
+
             }
         }
         return false;
