@@ -12,7 +12,7 @@ class ChatController extends Controller
     {
         $message = $request->input('message');
         $userName = $request->input('userName');
-        $time = Carbon::now()->addHours(2)->toDateTimeString();
+        $time = Carbon::now()->setTimezone('GMT+2')->format('H:i');
 
         return event(new Message($message, $userName, $time));
     }

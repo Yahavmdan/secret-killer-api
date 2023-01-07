@@ -12,11 +12,6 @@ class UserController extends Controller
 {
     public function store(UserSignInRequest $request)
     {
-        $attemptedEmail = User::where('email', $request['email'])->first();
-        if ($attemptedEmail) {
-            return response(['message' => 'User already exist'], 400);
-        }
-
         $user = User::create([
             'user_name' =>   $request['userName'],
             'email'     =>   $request['email'],
@@ -36,7 +31,7 @@ class UserController extends Controller
 
     public function login(UserLoginRequest $request)
     {
-        $user = User::where('email', $request['email'])->first();
+        $user = User::where('email', $request['email'])->orWhere('user_name', $request['email'])->first();
 
         if (!$user) {
             return response(collect(['message' => 'One of the details is wrong']), 400);
