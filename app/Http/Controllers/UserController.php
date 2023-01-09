@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserSignInRequest;
 use App\Models\User;
-use Illuminate\Http\Client\Response;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
-    public function store(UserSignInRequest $request)
+
+    public function store(UserSignInRequest $request): Response
     {
         $user = User::create([
             'user_name' =>   $request['userName'],
@@ -20,34 +22,36 @@ class UserController extends Controller
 
         $token = $user->createToken($user->id)->plainTextToken;
 
-        $response = [
-            'user'  => $user,
-            'token' => $token,
+        $sendUser = [
+            'userName' => $user->user_name,
+            'id' => $user->id,
+            'email' => $user->email,
+            'token' => $token
         ];
 
-        return response(collect($response), 200);
+        return response($sendUser, 200);
     }
 
 
-    public function login(UserLoginRequest $request)
+    public function login(UserLoginRequest $request): Response
     {
-        $user = User::where('email', $request['email'])->orWhere('user_name', $request['email'])->first();
+        $user = User::where('email', $request->get('emailOrUserName'))
+                ->orWhere('user_name', $request->get('emailOrUserName'))
+                ->first();
 
-        if (!$user) {
-            return response(collect(['message' => 'One of the details is wrong']), 400);
-        }
-
-        if (!Hash::check($request['password'], $user->password)) {
+        if (!$user || !Hash::check($request['password'], $user->password)) {
             return response(['message' => 'One of the details is wrong'], 400);
         }
 
-        $token = $user->createToken($user->id)->plainTextToken;
+        $token = PersonalAccessToken::where('tokenable_id', $user->id)->first();
 
-        $response = [
-            'user'  => $user,
-            'token' => $token,
+        $sendUser = [
+            'userName'  => $user->user_name,
+            'id'        => $user->id,
+            'email'     => $user->email,
+            'token'     => $token->token
         ];
 
-        return response(collect($response), 200);
+        return response($sendUser, 200);
     }
 }

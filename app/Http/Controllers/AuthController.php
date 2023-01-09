@@ -2,23 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\checkTokenRequest;
 use Illuminate\Http\Response;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
-    public function checkToken(Request $request): bool
+    public function checkToken(checkTokenRequest $request): Response
     {
-        $token = $request->getContent();
+        $token = $request->get('token');
+        $userId = $request->get('userId');
 
-        if ($token) {
-            $tokenExist = PersonalAccessToken::findToken($token);
-            if ($tokenExist) {
-                return true;
-            }
+        if (!$token) {
+            return response( ['message' => 'No token'], 400);
         }
-        return false;
+
+        $tokenExist =
+            PersonalAccessToken::where('tokenable_id', $userId)
+                ->where('token', $token)
+                ->first();
+
+        if ($tokenExist) {
+            return response( 1, 200);
+        }
+        return response( 0, 400);
     }
 }

@@ -4,13 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserLoginRequest extends FormRequest
+class SessionRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'emailOrUserName'   => 'required|string',
-            'password'          => 'required|string',
+            'name'         => 'required|string|unique:sessions,name',
+            'userId'       => 'required|numeric',
         ];
     }
 }
