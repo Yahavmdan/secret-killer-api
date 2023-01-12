@@ -20,7 +20,7 @@ class UserController extends Controller
             'password'  =>   bcrypt($request['password']),
         ]);
 
-        $token = $user->createToken($user->id)->plainTextToken;
+        $token = $user->createToken($user->user_name, ['all'])->plainTextToken;
 
         $sendUser = [
             'userName' => $user->user_name,
@@ -43,13 +43,13 @@ class UserController extends Controller
             return response(['message' => 'One of the details is wrong'], 400);
         }
 
-        $token = PersonalAccessToken::where('tokenable_id', $user->id)->first();
+        $token = $user->createToken($user->user_name, ['all'])->plainTextToken;
 
         $sendUser = [
             'userName'  => $user->user_name,
             'id'        => $user->id,
             'email'     => $user->email,
-            'token'     => $token->token
+            'token'     => $token
         ];
 
         return response($sendUser, 200);
