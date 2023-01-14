@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->id()->unique()->autoIncrement();
+            $table->text('name')->unique();
+            $table->integer('creator_id')->unique()->nullable(false)->default(0);
+            $table->text( 'creator_name')->unique()->nullable(false)->default('none');
+            $table->tinyInteger( 'is_active')->nullable(false)->default(0);
             $table->timestamps();
         });
     }

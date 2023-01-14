@@ -16,5 +16,7 @@ class Session extends Model
      */
     protected $fillable = [
         'name',
+        'creator_id',
+        'creator_name',
     ];
 }
