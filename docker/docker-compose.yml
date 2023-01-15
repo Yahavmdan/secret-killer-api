@@ -1,0 +1,61 @@
+version: '3.3'
+
+services:
+
+  # docker run --name myhr-api -p 80:80 443:443 -v $PWD:/var/www/html -d
+  api:
+    image: montebal/laradev:php80-2204
+    build:
+      context: ../
+      dockerfile: docker/dev.Dockerfile
+      target: dev
+    container_name: yahav_api
+    ports:
+      - ${HOST_HTTP_PORT}:80
+      - ${HOST_HTTPS_PORT}:443
+    environment:
+      XDEBUG_TRIGGER: "docker"
+      PHP_IDE_CONFIG: "serverName=docker-myhr"
+      GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
+    volumes:
+      - ./../:/var/www/html
+      - myhr-api-vendor:/var/www/html/vendor
+    networks:
+      myhr:
+
+
+  # export COMPOSER_VENDOR_DIR=/var/www/vendor
+
+  # docker run --name mysql -p 3306:3306 --network=mysql_mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true -e MYSQL_ROOT_HOST=% -v mysql:/var/lib/mysql -d mysql:5.7
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+    volumes:
+      - myhr-db:/var/lib/mysql
+    command:
+      - --sql-mode=NO_ENGINE_SUBSTITUTION
+    networks:
+      myhr:
+
+  #    docker run --name phpmyadmin -d --link mysql_mysql_1:db -p 8080:80 --network mysql_default phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8080:80
+    links:
+      - mysql:db
+    networks:
+      myhr:
+
+volumes:
+  myhr-db:
+    external: false
+  myhr-api-vendor:
+    external: false
+
+networks:
+  myhr:

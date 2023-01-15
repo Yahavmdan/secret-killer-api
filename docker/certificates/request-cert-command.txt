@@ -1,0 +1,1 @@
+openssl req -x509 -new -out apache-certificate.crt -keyout apache.key -days 365 -newkey rsa:4096 -sha256 -nodes
