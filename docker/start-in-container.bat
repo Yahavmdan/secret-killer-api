@@ -1,3 +1,3 @@
 @echo off
-powershell docker exec -it yahav_api bash
+powershell docker exec -it secretKiller_api bash
 

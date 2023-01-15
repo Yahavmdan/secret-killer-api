@@ -9,10 +9,10 @@ services:
       context: ../
       dockerfile: docker/dev.Dockerfile
       target: dev
-    container_name: yahav_api
+    container_name: secretKiller_api
     ports:
-      - ${HOST_HTTP_PORT}:80
-      - ${HOST_HTTPS_PORT}:443
+      - 80:80
+      - 443:443
     environment:
       GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
       SERVER_NAME: ${SERVER_NAME}
