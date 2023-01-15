@@ -14,9 +14,8 @@ services:
       - ${HOST_HTTP_PORT}:80
       - ${HOST_HTTPS_PORT}:443
     environment:
-      XDEBUG_TRIGGER: "docker"
-      PHP_IDE_CONFIG: "serverName=docker-myhr"
       GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
+      SERVER_NAME: ${SERVER_NAME}
     volumes:
       - ./../:/var/www/html
       - myhr-api-vendor:/var/www/html/vendor
