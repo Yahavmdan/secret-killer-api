@@ -14,12 +14,8 @@ services:
       - 80:80
       - 443:443
     environment:
-#        "require-dev": {
-#            "composer/xdebug-handler": "^1.4 || ^2.0",
-#            "phpunit/phpunit": "^4.8.36 || ^7.5.15"
-#        },
-#        XDEBUG_TRIGGER: "docker"
-#        PHP_IDE_CONFIG: "serverName=docker-myhr"
+        XDEBUG_TRIGGER: "docker"
+        PHP_IDE_CONFIG: "serverName=docke"
 
         GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
         SERVER_NAME: ${SERVER_NAME}

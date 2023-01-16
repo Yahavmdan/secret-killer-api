@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class UserSession extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'session_id',
+        'user_id',
+    ];
 }

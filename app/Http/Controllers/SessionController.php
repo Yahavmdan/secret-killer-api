@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\DeleteSessionRequest;
+use App\Http\Requests\EnterSessionRequest;
 use App\Http\Requests\StoreSessionRequest;
 use App\Models\Session;
 use App\Models\User;
+use App\Models\UserSession;
 use Illuminate\Http\Response;
 
 class SessionController extends Controller
@@ -49,4 +51,18 @@ class SessionController extends Controller
         }
         return response(['message' => 'Session can be deleted only by the creator'], 400);
     }
+
+    public function enter(EnterSessionRequest $request): Response
+    {
+        $sessionId = $request->get('sessionId');
+        $userId = $request->get('userId');
+
+        $userSession = UserSession::create([
+            'session_id' => $sessionId,
+            'user_id'     => $userId
+        ]);
+
+        return response($userSession, 200);
+    }
+
 }

@@ -26,6 +26,7 @@ Route::group(['middleware' => ['auth:sanctum', 'ability:all']], function () {
     Route::get('/sessions/index', [SessionController::class, 'index']);
     Route::post('/session/store', [SessionController::class, 'store']);
     Route::post('/session/delete', [SessionController::class, 'delete']);
+    Route::post('/session/enter', [SessionController::class, 'enter']);
 
 });
 
