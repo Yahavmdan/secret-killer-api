@@ -14,8 +14,13 @@ services:
       - 80:80
       - 443:443
     environment:
-      GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
-      SERVER_NAME: ${SERVER_NAME}
+#        "require-dev": {
+#            "composer/xdebug-handler": "^1.4 || ^2.0",
+#            "phpunit/phpunit": "^4.8.36 || ^7.5.15"
+#        },
+#        XDEBUG_TRIGGER: "docker"
+        GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
+        SERVER_NAME: ${SERVER_NAME}
     volumes:
       - ./../:/var/www/html
       - myhr-api-vendor:/var/www/html/vendor
