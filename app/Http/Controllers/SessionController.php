@@ -9,6 +9,7 @@ use App\Models\Session;
 use App\Models\User;
 use App\Models\UserSession;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class SessionController extends Controller
 {
@@ -21,6 +22,16 @@ class SessionController extends Controller
             return response(['message' => 'No sessions'], 400);
         }
         return response($sessions, 200);
+    }
+
+    public function getSessionByUserId($userId): Response
+    {
+        $session = DB::table('user_sessions AS us')
+            ->join('sessions AS s', 's.id', 'us.session_id')
+            ->where('us.user_id', $userId)
+            ->first();
+
+        return response(['sessions' => $session], 200);
     }
 
     public function store(StoreSessionRequest $request): Response
@@ -63,6 +74,11 @@ class SessionController extends Controller
         ]);
 
         return response($userSession, 200);
+    }
+
+    public function exit($userId): void
+    {
+        UserSession::where('user_id', $userId)->delete();
     }
 
 }
