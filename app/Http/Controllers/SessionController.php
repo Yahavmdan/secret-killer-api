@@ -24,6 +24,21 @@ class SessionController extends Controller
         return response($sessions, 200);
     }
 
+    public function getUsersSessionById($sessionId): Response
+    {
+        $users = DB::table('user_sessions AS us')
+            ->join('users AS u', 'u.id', 'us.user_id')
+            ->where('us.session_id', $sessionId)
+            ->select('u.id AS id','u.user_name AS userName', 'u.email')
+            ->groupBy('u.id')
+            ->get();
+
+        if (!count($users)) {
+            return response(['message' => 'No users'], 400);
+        }
+        return response($users, 200);
+    }
+
     public function getSessionByUserId($userId): Response
     {
         $session = DB::table('user_sessions AS us')
@@ -31,7 +46,7 @@ class SessionController extends Controller
             ->where('us.user_id', $userId)
             ->first();
 
-        return response(['sessions' => $session], 200);
+        return response(['session' => $session], 200);
     }
 
     public function store(StoreSessionRequest $request): Response
@@ -73,12 +88,32 @@ class SessionController extends Controller
             'user_id'     => $userId
         ]);
 
+        $users = DB::table('user_sessions AS us')
+            ->join('users AS u', 'u.id', 'us.user_id')
+            ->where('us.session_id', $sessionId)
+            ->select('u.id AS id','u.user_name AS userName', 'u.email')
+            ->groupBy('u.id')
+            ->get();
+
+        PusherController::newUserSession($users, $sessionId);
+
         return response($userSession, 200);
     }
 
-    public function exit($userId): void
+    public function exit(EnterSessionRequest $request): void
     {
+        $sessionId = $request->get('sessionId');
+        $userId = $request->get('userId');
+
         UserSession::where('user_id', $userId)->delete();
+
+        $users = DB::table('user_sessions AS us')
+            ->join('users AS u', 'u.id', 'us.user_id')
+            ->select('u.id AS id','u.user_name AS userName', 'u.email')
+            ->groupBy('u.id')
+            ->get();
+
+        PusherController::newUserSession($users, $sessionId);
     }
 
 }

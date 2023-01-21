@@ -15,7 +15,7 @@ services:
       - 443:443
     environment:
         XDEBUG_TRIGGER: "docker"
-        PHP_IDE_CONFIG: "serverName=docke"
+        PHP_IDE_CONFIG: "serverName=Docker"
 
         GIT_MERGE_AUTOEDIT: "no" # use default git message after pull: (set no to use default message)
         SERVER_NAME: ${SERVER_NAME}
